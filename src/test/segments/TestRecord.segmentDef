@@ -1,0 +1,30 @@
+package com.vse.test_segments;
+
+STRING    = com.vse.segments.types.CharField;
+INTEGER   = com.vse.segments.types.DecimalField;
+FLOAT     = com.vse.segments.types.FloatingDecimalField;
+PACKINT   = com.vse.segments.types.PackedDecimalField;
+PACKFLOAT = com.vse.segments.types.FloatingPackedDecimalField;
+
+TestRecord {
+   union tel-num-tag {
+      tel-num                       INTEGER(10);
+      filler1 {
+         tel-num-area               INTEGER(3);
+         tel-num-exchange            INTEGER(3);
+         tel-num-extension           INTEGER(4);
+      }
+   } # end of union vend-tel-num-tag
+   address-1                     STRING(23);
+   address-2                     STRING(23);
+   city                          STRING(19);
+   state                         STRING(2);
+   zipcode {
+      zip5                          STRING(5);
+      zip4                          STRING(4);
+   } # end of
+   right-aligned-string			STRING(5) pad-char="_";
+   test-float                FLOAT(5) decimal-positions=2;
+   test-packed-float			PACKFLOAT(4) decimal-positions=3;
+   test-packed-int				PACKINT(5) signed=true;
+} # end of segment
