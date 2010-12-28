@@ -33,9 +33,9 @@ class ParseContext {
 		return registry.getSegment(segmentName);
 	}
 
-	public ValueIdentifier resolveIdentifierFor(String currentType, String token)
+	public ValueIdentifier resolveIdentifierFor(String currentType, String modifierName, String modifierValue)
 			throws ParseException {
-		return registry.resolveIdentifierFor(currentType, token);
+		return registry.resolveIdentifierFor(currentType, modifierName, modifierValue);
 	}
 
 }

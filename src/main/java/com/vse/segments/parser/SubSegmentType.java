@@ -37,7 +37,7 @@ class SubSegmentType extends FieldType {
 		return new SubFieldBuilder(name, repeats);
 	}
 
-	public ValueIdentifier resolveIdentifier(String name) {
+	public ValueIdentifier resolveIdentifier(String name, String value) {
 		return null;
 	}
 

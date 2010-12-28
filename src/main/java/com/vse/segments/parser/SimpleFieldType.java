@@ -52,15 +52,20 @@ class SimpleFieldType extends FieldType {
 		return new SimpleFieldBuilder(name, modifiers);
 	}
 
-	public ValueIdentifier resolveIdentifier(String name) {
-		Class<?> type = fieldClass;
-		if (type != null)
+	public ValueIdentifier resolveIdentifier(String name, String value) {
+		if (fieldClass != null) {
 			try {
-				Field field = type.getField(name);
-				return new IdValueIdentifier(type.getName() + "." + name,
+				Method m = Utils.findSetPropertyMethodForEnum(fieldClass, name, value);
+				if (m != null) {
+					return new IdValueIdentifier(m.getParameterTypes()[0].getName().replace('$', '.')+ "."+value,
+							Utils.resolveEnumValue(m.getParameterTypes()[0], value));
+				}
+				Field field = fieldClass.getField(value);
+				return new IdValueIdentifier(fieldClass.getName() + "." + value,
 						field.get(null));
-			} catch (Exception e) {
+			} catch (Exception e) { // ignore
 			}
+		}
 
 		return null;
 	}

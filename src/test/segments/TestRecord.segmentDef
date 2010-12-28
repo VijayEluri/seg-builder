@@ -23,7 +23,7 @@ TestRecord {
       zip5                          STRING(5);
       zip4                          STRING(4);
    } # end of
-   right-aligned-string			STRING(5) pad-char="_";
+   right-aligned-string			STRING(5) pad-char="_" alignment=RIGHT;
    test-float                FLOAT(5) decimal-positions=2;
    test-packed-float			PACKFLOAT(4) decimal-positions=3;
    test-packed-int				PACKINT(5) signed=true;

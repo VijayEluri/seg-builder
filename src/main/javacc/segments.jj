@@ -264,14 +264,14 @@ void segmentFieldModifier(ParseContext context, String currentType, Map<String, 
   ValueIdentifier modifierValue;
 }
 {
-  modifierName=id() "=" modifierValue=value(context, currentType)
+  modifierName=id() "=" modifierValue=value(context, currentType, modifierName)
   {
     values.put (modifierName, modifierValue);
   } 
 }
 
 
-ValueIdentifier value (ParseContext context, String currentType) :
+ValueIdentifier value (ParseContext context, String currentType, String modifierName) :
 {
   long n;
   String s;
@@ -292,7 +292,7 @@ ValueIdentifier value (ParseContext context, String currentType) :
 
   | <ID>
   { 
-    ValueIdentifier id = context.resolveIdentifierFor(currentType, token.image);
+    ValueIdentifier id = context.resolveIdentifierFor(currentType, modifierName, token.image);
     if (id == null)
       throw new ParseException("Invalid value token: "+token.image);
 

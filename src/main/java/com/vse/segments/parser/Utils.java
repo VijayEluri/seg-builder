@@ -11,20 +11,52 @@ import java.util.StringTokenizer;
 
 class Utils {
 
-	public static Method findSetPropertyMethodFor(Class<?> c, String property,
-			Class<?> type) throws BuildException {
-		return findSetPropertyMethodFor(c, property, type, false);
+	public static Method findSetPropertyMethodForEnum(Class<?> c, String property,
+			String enumValue) throws BuildException {
+		try {
+	
+			String setterName = prepareIdentifier("set-" + property);
+			MethodDescriptor md[] = Introspector.getBeanInfo(c).getMethodDescriptors();
+			Method setter = null;
+			for (int i = 0; i < md.length; i++) {
+				Method m = md[i].getMethod();
+	
+				if (!m.getName().equals(setterName))
+					continue;
+	
+				if (m.getParameterTypes().length != 1)
+					continue;
+				
+				if (Enum.class.isAssignableFrom(m.getParameterTypes()[0])) {
+					setter = m;
+				}
+			}
+			
+			if (setter == null) {
+				return null;
+			}
+			
+			Enum<?> value = resolveEnumValue(setter.getParameterTypes()[0], enumValue);
+			return  (value != null) ? setter : null;
+		} catch (IntrospectionException exc) {
+			throw new BuildException(exc.toString(), exc);
+		}
+	}
+
+	public static Enum<?> resolveEnumValue(Class<?> c, String value) {
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		Enum<?> e = Enum.valueOf((Class<Enum>)c, value);
+		return e;
 	}
 
 	public static Method findSetPropertyMethodFor(Class<?> c, String property,
-			Class<?> type, boolean failFast) throws BuildException {
+			Class<?> type) throws BuildException {
 		try {
 
 			List<Method> methods = new LinkedList<Method>();
 
 			String setterName = prepareIdentifier("set-" + property);
-			MethodDescriptor md[] = Introspector.getBeanInfo(c)
-					.getMethodDescriptors();
+			MethodDescriptor md[] = Introspector.getBeanInfo(c).getMethodDescriptors();
 			for (int i = 0; i < md.length; i++) {
 				Method m = md[i].getMethod();
 
@@ -57,14 +89,14 @@ class Utils {
 				throw new BuildException(
 						"Ambiquity in setter methods for property " + property);
 
-			if (methods.size() == 0 && failFast)
+			if (methods.size() == 0)
 				throw new BuildException("Don't know how to set property "
 						+ property);
 
 			return methods.size() > 0 ? methods.get(0) : null;
 
 		} catch (IntrospectionException exc) {
-			throw new BuildException(exc.toString());
+			throw new BuildException(exc.toString(), exc);
 		}
 	}
 

@@ -61,15 +61,15 @@ class BuildRegistry {
 		return segments.get(segmentName);
 	}
 
-	public ValueIdentifier resolveIdentifierFor(String currentType, String token)
+	public ValueIdentifier resolveIdentifierFor(String currentType, String identifierName, String identifierValue)
 			throws ParseException {
-		if (token.equals("true"))
+		if ("true".equalsIgnoreCase(identifierValue))
 			return new ConstValueIdentifier(Boolean.TRUE);
 
-		if (token.equals("false"))
+		if ("false".equalsIgnoreCase(identifierValue))
 			return new ConstValueIdentifier(Boolean.FALSE);
 
-		return getType(currentType).resolveIdentifier(token);
+		return getType(currentType).resolveIdentifier(identifierName, identifierValue);
 	}
 
 	public Iterator<String> getSegmentNames() {
